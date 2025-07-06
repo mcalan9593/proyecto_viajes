@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendaciones de Viaje</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+    <header>
+        <h1>🍽 Recomendaciones</h1>
+        <div class="theme-toggle">
+            <label for="temaSelector">🌙 / 🌞</label>
+            <input type="checkbox" id="temaSelector">
+        </div>
+    </header>
+
+    <div class="filters">
+        <button class="filtro-btn" data-tipo="Desayuno">Desayuno</button>
+        <button class="filtro-btn" data-tipo="Comida">Comida/Cena</button>
+        <button class="filtro-btn" data-tipo="Postre">Postres</button>
+        <button class="filtro-btn" data-tipo="Turismo">Qué ver</button>
+        <button class="filtro-btn" data-tipo="todos">Mostrar todo</button>
+    </div>
+
+    <main>
+        <div class="contenedor-cards" id="contenedor-cards"></div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+<footer>
+    <p>Bon voyage ✈️</p>
+</footer>
+
+</html>
