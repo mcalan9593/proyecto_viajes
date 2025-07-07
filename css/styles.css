@@ -11,7 +11,7 @@ body {
 header, footer {
     background-color: #2ecc71;
     color: #fff;
-    padding: 1rem;
+    padding: 2rem;
     text-align: center;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -230,17 +230,77 @@ body.dark-mode .filtro-btn {
     font-size: 1.1rem;
 }
 
-.card-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 10px;
+/* Exchange Rate Display Styles */
+#exchange-rate-display {
+    padding: 8px;
+    border-radius: 4px;
+    font-family: monospace;
 }
 
-.card {
-    overflow: hidden; /* Para bordes redondeados en la imagen */
+/* ACORDEÓN CORREGIDO - Versión flexible */
+.pais-header {
+    position: relative;
+    padding-right: 40px; /* Espacio para el símbolo */
+    cursor: pointer;
 }
+
+.pais-header::after {
+    content: '+';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.pais-header.expanded::after {
+    content: '-';
+}
+
+/* Asegurar visibilidad en dark mode */
+body.dark-mode .pais-header::after {
+    color: #fff;
+}
+
+.pais-container {
+  margin-bottom: 4rem;
+  position: relative; /* Añadido para contexto de posición */
+}
+
+.ciudad-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pais-container.expanded .ciudad-container {
+  max-height: none; /* Eliminamos el límite fijo */
+  height: auto; /* Altura natural del contenido */
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Asegurar que las cards se muestren completamente */
+.cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  transform: translateZ(0); /* Mejora el rendimiento de animación */
+}
+
+/* Ajustes para mantener la alineación de banderas */
+.pais-header h2 {
+  margin: 0;
+  padding: 0;
+}
+
+
 
 @media (min-width: 768px) {
     .contenedor-cards {
@@ -269,4 +329,50 @@ body.dark-mode .filtro-btn {
   .ciudad-container h3 {
     text-align: center;
   }
+  
+}
+
+/* Botón Volver Arriba */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.back-to-top.visible {
+    opacity: 0.8;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    opacity: 1 !important;
+    background-color: #27ae60;
+}
+
+
+
+@media (max-width: 767px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
 }
