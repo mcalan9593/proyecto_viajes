@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Botón Volver Arriba
     const backToTopButton = document.createElement('button');
     backToTopButton.className = 'back-to-top';
     backToTopButton.innerHTML = '↑';
@@ -21,7 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Variables existentes
+    const paisMoneda = {
+        "Italia": "EUR",
+        "Francia": "EUR",
+        "Bélgica": "EUR",
+        "México": "MXN",
+        "Estados Unidos": "USD",
+        "Cuba": "CUP"
+    };
+
     const botones = document.querySelectorAll('.filtro-btn');
     const tarjetasContainer = document.getElementById('contenedor-cards');
     const temaSelector = document.getElementById('temaSelector');
@@ -31,10 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     exchangeRateDisplay.style.margin = '10px 0';
     exchangeRateDisplay.style.fontSize = '0.9em';
     document.querySelector('header').appendChild(exchangeRateDisplay);
-    
-    const EXCHANGE_API = 'https://api.frankfurter.app/latest?from=EUR';
 
-    // 3. Función para formatear fecha
     const formatDate = (date) => {
         if (!(date instanceof Date)) return "Fecha no disponible";
         
@@ -48,72 +52,113 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         return date.toLocaleString('es-MX', options);
     };
-
-    // 4. Función updateExchangeRates
+    
     async function updateExchangeRates() {
+        const base = window.monedaSeleccionada || "EUR";
         const today = new Date();
-        const storedRates = localStorage.getItem('exchangeRates');
+        const storedRates = localStorage.getItem('exchangeRates_' + base);
 
         try {
             let rates;
+
             if (storedRates) {
                 const { date, rates: cachedRates } = JSON.parse(storedRates);
                 if (date === today.toDateString()) {
                     rates = cachedRates;
                     rates.updated = new Date(rates.updated);
-                    if(isNaN(rates.updated.getTime())) {
+                    if (isNaN(rates.updated.getTime())) {
                         rates.updated = new Date();
                     }
                 }
             }
+
             if (!rates) {
-                const response = await fetch(EXCHANGE_API);
-                const data = await response.json();
-                rates = {
-                    USD: data.rates.USD || 1.08,
-                    MXN: data.rates.MXN || 20.50,
-                    updated: new Date()
-                };
-                localStorage.setItem('exchangeRates', JSON.stringify({
+                if (base === "CUP") {
+                    rates = {
+                        USD: 0.042,
+                        MXN: 0.72,
+                        updated: new Date()
+                    };
+                } else {
+                    const response = await fetch(`https://api.frankfurter.app/latest?from=${base}`);
+                    const data = await response.json();
+                    rates = {
+                        USD: data.rates.USD || 1,
+                        MXN: data.rates.MXN || 1,
+                        updated: new Date()
+                    };
+                }
+
+                localStorage.setItem('exchangeRates_' + base, JSON.stringify({
                     date: today.toDateString(),
                     rates
                 }));
             }
 
+            let cambioTexto = "";
+
+            if (base === "EUR") {
+                cambioTexto = `1 EUR = ${rates.USD.toFixed(2)} USD | ${rates.MXN.toFixed(2)} MXN`;
+            } else if (base === "USD") {
+                cambioTexto = `1 USD = ${(1 / rates.USD).toFixed(2)} EUR | ${(rates.MXN / rates.USD).toFixed(2)} MXN`;
+            } else if (base === "MXN") {
+                cambioTexto = `1 MXN = ${(1 / rates.MXN).toFixed(2)} EUR | ${(1 / (rates.MXN / rates.USD)).toFixed(2)} USD`;
+            } else if (base === "CUP") {
+                cambioTexto = `1 CUP ≈ ${rates.USD.toFixed(2)} USD | ${rates.MXN.toFixed(2)} MXN (estimado)`;
+            } else {
+                cambioTexto = `1 ${base} = ${rates.USD.toFixed(2)} USD | ${rates.MXN.toFixed(2)} MXN`;
+            }
+
             exchangeRateDisplay.innerHTML = `
-                <div class="exchange-info">
-                    <div class="exchange-title">💵 Tipo de cambio</div>
-                    <div class="exchange-rates">
-                        1 EUR = ${rates.USD.toFixed(2)} USD | ${rates.MXN.toFixed(2)} MXN
-                    </div>
-                    <div class="exchange-time">
-                        Actualizado: ${formatDate(rates.updated)}
-                    </div>
-                </div>
+            <div class="exchange-info">
+                <div class="exchange-title">💵 Tipo de cambio</div>
+                <div class="exchange-rates">${cambioTexto}</div>
+                <div class="exchange-time">Actualizado: ${formatDate(rates.updated)}</div>
+            </div>
             `;
 
         } catch (error) {
             console.error("Error:", error);
             exchangeRateDisplay.innerHTML = `
-                <div class="exchange-info error">
-                    <div class="exchange-title">💵 Tipo de cambio (estimado)</div>
-                    <div class="exchange-rates">
-                        1 EUR ≈ 1.08 USD | 20.50 MXN
-                    </div>
-                    <div class="exchange-time">
-                        Última conexión: ${formatDate(new Date())}
-                    </div>
-                </div>
+            <div class="exchange-info error">
+                <div class="exchange-title">💵 Tipo de cambio (estimado)</div>
+                <div class="exchange-rates">No disponible para "${window.monedaSeleccionada || 'desconocido'}"</div>
+                <div class="exchange-time">Última conexión: ${formatDate(new Date())}</div>
+            </div>
             `;
         }
     }
 
-    // 5. Función loadCSVData con acordeón corregido
     function loadCSVData() {
-        fetch('recomendaciones_completas.csv')
-            .then(response => response.text())
+        const params = new URLSearchParams(window.location.search);
+        const user = params.get('user');
+        let csvPath = 'files/recomendaciones.csv';
+
+        if (user) {
+            csvPath = `files/recomendaciones_${user}.csv`;
+        }
+
+        fetch(csvPath)
+            .then(response => {
+                if (!response.ok) throw new Error('Archivo no encontrado');
+                return response.text();
+            })
             .then(data => {
                 const rows = data.split('\n').slice(1);
+                let monedaActual = "EUR";
+
+                const primerFilaValida = rows.find(row => row.split(',').length >= 7 && row.trim() !== '');
+                if (primerFilaValida) {
+                    const columnas = primerFilaValida.split(',');
+                    const pais = columnas[5]?.trim();
+                    console.log("País detectado:", pais);
+                    if (paisMoneda[pais]) {
+                        monedaActual = paisMoneda[pais];
+                    }
+                }
+
+                window.monedaSeleccionada = monedaActual;
+                updateExchangeRates();
                 const paises = {}; 
 
                 rows.forEach(row => {
@@ -156,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
-                // Crear contenedores para cada país
                 Object.keys(paises).forEach((pais, index) => {
                     const countryContainer = document.createElement('div');
                     countryContainer.classList.add('pais-container', pais.toLowerCase());
@@ -176,26 +220,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         flagImage.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg';
                     } else if (pais === 'Italia') {
                         flagImage.src = 'https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg';
+                    } else if (pais === 'Cuba') {
+                        flagImage.src = 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Flag_of_Cuba.svg';
+                    } else if (pais === 'México') {
+                        flagImage.src = 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg';
+                    } else if (pais === 'España') {
+                        flagImage.src = 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg';
                     }
                     countryHeader.appendChild(flagImage);
                     countryContainer.appendChild(countryHeader);
 
-                    // Crear ciudades para este país
                     Object.keys(paises[pais]).forEach(ciudad => {
                         const cityContainer = document.createElement('div');
                         cityContainer.classList.add('ciudad-container');
                         cityContainer.dataset.ciudad = ciudad.toLowerCase();
 
+                        const cityHeader = document.createElement('div');
+                        cityHeader.classList.add('ciudad-header');
+                        
                         const cityTitle = document.createElement('h3');
                         cityTitle.textContent = ciudad;
-                        cityContainer.appendChild(cityTitle);
+                        cityHeader.appendChild(cityTitle);
+                        cityContainer.appendChild(cityHeader);
 
-                        // Sección Restaurantes
+                        const ciudadContent = document.createElement('div');
+                        ciudadContent.classList.add('ciudad-content');
+
                         if (paises[pais][ciudad].Restaurantes.length > 0) {
                             const restaurantesTitle = document.createElement('h4');
                             restaurantesTitle.textContent = 'Restaurantes';
                             restaurantesTitle.classList.add('restaurantes-title');
-                            cityContainer.appendChild(restaurantesTitle);
+                            ciudadContent.appendChild(restaurantesTitle);
 
                             const restaurantsWrapper = document.createElement('div');
                             restaurantsWrapper.classList.add('cards-wrapper', 'restaurantes-wrapper');
@@ -211,15 +266,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `;
                                 restaurantsWrapper.appendChild(card);
                             });
-                            cityContainer.appendChild(restaurantsWrapper);
+                            ciudadContent.appendChild(restaurantsWrapper);
                         }
 
-                        // Sección Turismo
                         if (paises[pais][ciudad].Turismo.length > 0) {
                             const turismoTitle = document.createElement('h4');
                             turismoTitle.textContent = 'Lugares Turísticos';
                             turismoTitle.classList.add('turismo-title');
-                            cityContainer.appendChild(turismoTitle);
+                            ciudadContent.appendChild(turismoTitle);
 
                             const tourismWrapper = document.createElement('div');
                             tourismWrapper.classList.add('cards-wrapper', 'turismo-wrapper');
@@ -234,23 +288,37 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `;
                                 tourismWrapper.appendChild(card);
                             });
-                            cityContainer.appendChild(tourismWrapper);
+                            ciudadContent.appendChild(tourismWrapper);
+                        }
+
+                        cityContainer.appendChild(ciudadContent);
+
+                        cityHeader.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            cityContainer.classList.toggle('expanded');
+                            cityHeader.classList.toggle('expanded');
+                        });
+
+                        // Estado inicial para Bélgica (primer país)
+                        if (index === 0) {
+                            cityContainer.classList.add('expanded');
+                            cityHeader.classList.add('expanded');
                         }
 
                         countryContainer.appendChild(cityContainer);
                     });
 
-                    // Evento corregido para el acordeón (símbolos +/-)
-                    countryHeader.addEventListener('click', function() {
-                        countryContainer.classList.toggle('expanded');
-                        this.classList.toggle('expanded');
-                        
-                         if (countryContainer.classList.contains('expanded')) {
-                            countryContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    countryHeader.addEventListener('click', function(e) {
+                        if (e.target === this || e.target === countryTitle || e.target === flagImage) {
+                            countryContainer.classList.toggle('expanded');
+                            this.classList.toggle('expanded');
+                            
+                            if (countryContainer.classList.contains('expanded')) {
+                                countryContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
                         }
                     });
 
-                    // Expandir el primer país por defecto
                     if (index === 0) {
                         countryContainer.classList.add('expanded');
                         countryHeader.classList.add('expanded');
@@ -259,10 +327,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     tarjetasContainer.appendChild(countryContainer);
                 });
             })
-            .catch(error => console.error('Error loading CSV data:', error));
+            .catch(error => {
+                console.error('Error loading CSV data:', error);
+                tarjetasContainer.innerHTML = `
+                    <div class="sin-info">
+                        🛑 No hay información disponible para este usuario.
+                    </div>
+                `;
+            });
     }
 
-    // 6. Funciones existentes
     function aplicarTema() {
         document.body.classList.toggle('dark-mode', temaSelector.checked);
     }
@@ -300,7 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 7. Event listeners
     temaSelector.addEventListener('change', aplicarTema);
     
     botones.forEach(boton => {
@@ -312,9 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 8. Inicialización
     aplicarTema();
-    updateExchangeRates();
     loadCSVData();
     mostrarTarjetas('todos');
 });

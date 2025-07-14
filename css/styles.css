@@ -1,4 +1,3 @@
-/* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -9,7 +8,7 @@ body {
 }
 
 header, footer {
-    background-color: #2ecc71;
+    background-color: #2c3e50;
     color: #fff;
     padding: 2rem;
     text-align: center;
@@ -17,7 +16,7 @@ header, footer {
 }
 
 main {
-    padding: 0 100px;
+    padding: 90px 100px;
     margin: 0 auto;
 }
 
@@ -26,12 +25,9 @@ body.dark-mode {
     color: #e0e0e0;
 }
 
-header, footer {
-    background-color: #2c3e50;
-}
 
 .card {
-    flex: 1 1 30%;
+    flex: 1 1 calc(33.333% - 30px);
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -42,6 +38,9 @@ header, footer {
     vertical-align: top;
     cursor: pointer;
     border: 2px solid #ddd;
+    box-sizing: border-box;
+    
+    
 }
 
 body.dark-mode .card {
@@ -52,7 +51,7 @@ body.dark-mode .card {
 
 .card:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    
 }
 
 .card h4 {
@@ -98,12 +97,14 @@ body.dark-mode .card p {
     display: flex;
     gap: 1.5rem;
     padding: 2rem 0;
+    margin: 0 -15px; 
+    width: calc(100% + 30px);
 }
 
 
 .pais-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
     margin-bottom: 4rem;
     padding-bottom: 2rem;
 }
@@ -178,7 +179,7 @@ body.dark-mode .filtro-btn.active {
 }
 
 .filters {
-  position: sticky;
+    position: sticky;
     top: 10px;
     display: flex;
     justify-content: center;
@@ -230,17 +231,17 @@ body.dark-mode .filtro-btn {
     font-size: 1.1rem;
 }
 
-/* Exchange Rate Display Styles */
+
 #exchange-rate-display {
     padding: 8px;
     border-radius: 4px;
     font-family: monospace;
 }
 
-/* ACORDEÓN CORREGIDO - Versión flexible */
+/* ACORDEÓN */
 .pais-header {
     position: relative;
-    padding-right: 40px; /* Espacio para el símbolo */
+    padding-right: 40px;
     cursor: pointer;
 }
 
@@ -259,25 +260,26 @@ body.dark-mode .filtro-btn {
     content: '-';
 }
 
-/* Asegurar visibilidad en dark mode */
+
 body.dark-mode .pais-header::after {
     color: #fff;
 }
 
 .pais-container {
   margin-bottom: 4rem;
-  position: relative; /* Añadido para contexto de posición */
+  position: relative;
 }
 
 .ciudad-container {
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
 }
 
 .pais-container.expanded .ciudad-container {
-  max-height: none; /* Eliminamos el límite fijo */
-  height: auto; /* Altura natural del contenido */
+  max-height: none; 
+  height: auto; 
   animation: fadeIn 0.5s ease forwards;
 }
 
@@ -286,19 +288,19 @@ body.dark-mode .pais-header::after {
   to { opacity: 1; }
 }
 
-/* Asegurar que las cards se muestren completamente */
+
 .cards-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  transform: translateZ(0); /* Mejora el rendimiento de animación */
+    flex-wrap: wrap;
+    padding: 0 20px;
+     
 }
 
-/* Ajustes para mantener la alineación de banderas */
+
 .pais-header h2 {
   margin: 0;
   padding: 0;
 }
+
 
 
 
@@ -316,20 +318,72 @@ body.dark-mode .pais-header::after {
         display: block;
         padding: 1rem;
     }
-    .card {
-      flex: 1 1 100%;
-  }
+    .card h4 {
+        font-size: 1.3rem; /* Tamaño de fuente más grande */
+    }
+    
+    .card p {
+        font-size: 1rem; /* Tamaño de fuente más grande */
+    }
+    
+    .pais-header {
+        justify-content: center;
+        flex-direction: column; /* Cambiamos a columna para mejor organización */
+        text-align: center;
+    }
+    
+    .pais-container h2 {
+        font-size: 2rem; /* Tamaño más grande para el título del país */
+        margin-bottom: 10px;
+    }
+    
+    .ciudad-container h3 {
+        font-size: 1.6rem; /* Tamaño más grande para el título de ciudad */
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .flag {
+        margin: 0 auto 10px; /* Centramos la bandera */
+    }
+    
+    .cards-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
     main {
-      padding: 0 10px;
-      margin: 0 auto;
-  }
-  .pais-header {
-    justify-content: center;
-  }
-  .ciudad-container h3 {
-    text-align: center;
-  }
-  
+        overflow-x: hidden;
+        padding: 70px 20px;
+    }
+    
+    /* Mejoramos el espaciado de los botones de filtro */
+    .filters {
+        position: static;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .filtro-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        margin: 3px;
+    }
+    
+    /* Ajustamos el acordeón de ciudad */
+    .ciudad-header {
+        padding: 12px 0;
+    }
+    
+    .ciudad-header h3 {
+        font-size: 1.8rem; /* Tamaño más grande para el título de ciudad */
+        padding-right: 25px; /* Espacio para el icono +/- */
+    }
+    
+    .ciudad-header::after {
+        right: 5px;
+        font-size: 1.4rem;
+    }
 }
 
 /* Botón Volver Arriba */
@@ -375,4 +429,43 @@ body.dark-mode .pais-header::after {
         height: 40px;
         font-size: 16px;
     }
+}
+
+
+/* === Estilos para el acordeón de CIUDAD === */
+.ciudad-header {
+    position: relative;
+    padding: 10px 0;
+    margin: 10px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+body.dark-mode .ciudad-header {
+    border-bottom-color: #444;
+}
+
+.ciudad-header::after {
+    content: '+';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.ciudad-header.expanded::after {
+    content: '-';
+}
+
+.ciudad-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    padding-left: 15px;
+}
+
+.ciudad-container.expanded .ciudad-content {
+    max-height: fit-content;
 }
