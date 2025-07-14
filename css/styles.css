@@ -317,6 +317,7 @@ body.dark-mode .pais-header::after {
     .contenedor-cards {
         display: block;
         padding: 1rem;
+        
     }
     .card h4 {
         font-size: 1.3rem; /* Tamaño de fuente más grande */
@@ -327,6 +328,7 @@ body.dark-mode .pais-header::after {
     }
     
     .pais-header {
+        margin: 0 80px;
         justify-content: center;
         flex-direction: column; /* Cambiamos a columna para mejor organización */
         text-align: center;
@@ -348,6 +350,7 @@ body.dark-mode .pais-header::after {
     }
     
     .cards-wrapper {
+        max-width: 85%;
         flex-direction: column;
         gap: 15px;
     }
@@ -372,12 +375,13 @@ body.dark-mode .pais-header::after {
     
     /* Ajustamos el acordeón de ciudad */
     .ciudad-header {
+        max-width: 91%;
         padding: 12px 0;
     }
     
     .ciudad-header h3 {
+        
         font-size: 1.8rem; /* Tamaño más grande para el título de ciudad */
-        padding-right: 25px; /* Espacio para el icono +/- */
     }
     
     .ciudad-header::after {

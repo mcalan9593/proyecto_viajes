@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const enlace = columns[4];
                     const pais = columns[5];
                     const ciudad = columns[6];
+                    const horario = columns[7] || 'Horario no disponible';
                     
                     tipo = tipo.replace(/\s+/g, '_');
 
@@ -186,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         tipo,
                         recomendacion,
                         precio,
+                        horario,
                         enlace
                     };
 
@@ -196,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             nombre,
                             tipo,
                             precio,
+                            horario,
                             enlace
                         });
                     }
@@ -262,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4>${item.nombre}</h4>
                                     <p><strong>Recomendación:</strong> ${item.recomendacion}</p>
                                     <p><strong>Precio:</strong> ${item.precio}</p>
+                                    <p><strong>Horario:</strong> ${item.horario}</p>
                                     <a href="${item.enlace}" target="_blank">Ver en Google Maps</a>
                                 `;
                                 restaurantsWrapper.appendChild(card);
@@ -284,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 card.innerHTML = `
                                     <h4>${item.nombre}</h4>
                                     <p><strong>Precio:</strong> ${item.precio}</p>
+                                    <p><strong>Horario:</strong> ${item.horario}</p>
                                     <a href="${item.enlace}" target="_blank">Ver en Google Maps</a>
                                 `;
                                 tourismWrapper.appendChild(card);
@@ -299,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             cityHeader.classList.toggle('expanded');
                         });
 
-                        // Estado inicial para Bélgica (primer país)
+                        
                         if (index === 0) {
                             cityContainer.classList.add('expanded');
                             cityHeader.classList.add('expanded');
