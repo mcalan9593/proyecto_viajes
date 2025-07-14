@@ -5,6 +5,9 @@ body {
     background-color: #f4f7f6;
     color: #333;
     transition: background-color 0.3s ease;
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la pantalla */
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -22,6 +25,7 @@ footer {
     padding: 1.5rem 0;
     text-align: center;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: auto;
 }
 
 main {
