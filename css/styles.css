@@ -343,13 +343,12 @@ body.dark-mode .pais-header::after {
     .pais-header {
         margin: 0 80px;
         justify-content: center;
-        flex-direction: column; /* Cambiamos a columna para mejor organización */
-        text-align: center;
-        padding: 0;
+        flex-direction: column;
+        padding: 20px 0;
     }
     
     .pais-container h2 {
-        font-size: 2rem; /* Tamaño más grande para el título del país */
+        font-size: 2rem;
         margin-bottom: 10px;
     }
     
@@ -359,7 +358,7 @@ body.dark-mode .pais-header::after {
 
     .ciudad-container h3 {
         font-size: 1.6rem; /* Tamaño más grande para el título de ciudad */
-        text-align: center;
+        text-align: left;
         margin-bottom: 15px;
         padding: 0;
     }
