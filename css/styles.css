@@ -333,23 +333,23 @@ body.dark-mode .pais-header::after {
     }
 
     .card h4 {
-        font-size: 1.3rem; /* Tamaño de fuente más grande */
+        font-size: 1.3rem;
     }
     
     .card p {
-        font-size: 1rem; /* Tamaño de fuente más grande */
+        font-size: 1rem;
     }
     
     .pais-header {
-        margin: 0 80px;
+        margin: 0 99px;
         justify-content: center;
         flex-direction: column;
-        padding: 10px 5px;
+        padding: 10px 5;
     }
     
     .pais-container h2 {
         font-size: 2rem;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
     
     .ciudad-container {
@@ -357,14 +357,14 @@ body.dark-mode .pais-header::after {
     }
 
     .ciudad-container h3 {
-        font-size: 1.6rem; /* Tamaño más grande para el título de ciudad */
+        font-size: 1.6rem; 
         text-align: left;
         margin-bottom: 15px;
         padding: 0;
     }
     
     .flag {
-        margin: 0 auto 10px; /* Centramos la bandera */
+        margin: 0 auto 10px;
     }
     
     .cards-wrapper {
@@ -378,7 +378,7 @@ body.dark-mode .pais-header::after {
         padding: 40px 20px;
     }
     
-    /* Mejoramos el espaciado de los botones de filtro */
+    
     .filters {
         position: static;
         margin-top: 15px;
@@ -391,7 +391,7 @@ body.dark-mode .pais-header::after {
         margin: 3px;
     }
     
-    /* Ajustamos el acordeón de ciudad */
+    
     .ciudad-header {
         max-width: 100%;
         padding: 12px 0;
@@ -399,7 +399,7 @@ body.dark-mode .pais-header::after {
     
     .ciudad-header h3 {
         
-        font-size: 1.8rem; /* Tamaño más grande para el título de ciudad */
+        font-size: 1.8rem; 
     }
     
     .ciudad-header::after {
