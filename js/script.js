@@ -163,14 +163,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 rows.forEach(row => {
                     const columns = row.split(',');
-                    const nombre = columns[0];
-                    let tipo = columns[1];
-                    const recomendacion = columns[2];
-                    const precio = columns[3];
-                    const enlace = columns[4];
-                    const pais = columns[5];
-                    const ciudad = columns[6];
-                    const horario = columns[7] || 'Horario no disponible';
+                    const nombre = columns[1];
+                    let tipo = columns[2];
+                    const recomendacion = columns[3];
+                    const precio = columns[4];
+                    const enlace = columns[5];
+                    const pais = columns[6];
+                    const ciudad = columns[7];
+                    const horario = columns[8] || 'Horario no disponible';
                     
                     tipo = tipo.replace(/\s+/g, '_');
 
